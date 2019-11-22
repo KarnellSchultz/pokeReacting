@@ -27,7 +27,7 @@ class App extends Component {
   render() {
     const { data } = this.state
 
-      return  <div className="  flex-column justify-content-center"> <Cardhooks data={data} name={data.results} /> 
+      return  <div className="  d-flex flex-column "> <Cardhooks data={data} name={data.results} /> 
       </div> 
   }
 }

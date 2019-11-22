@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Pagination from "./Pagination";
 import PokemonImages from "./PokemonImages";
-import PokemonDetails from './PokemonDetails'
+import PokemonDetails from './PokemonDetails';
+import PokemonInput from './PokemonInput';
 
 export default function Cardhooks(props) {
   const [name, setName] = useState([]);
@@ -16,12 +17,11 @@ export default function Cardhooks(props) {
   const [height, setHeight] = useState("");
   const [weight, setWeight] = useState("");
   const [baseExp, setBaseExp] = useState("");
-  const [type, setType] = useState([type1, type2]);
+  const [type, setType] = useState([]);
 
 
   useEffect(() => {
     setLoading(true);
-    document.title = `${ID} ${name}`;
     fetchData();
     async function fetchData() {
         try {
@@ -35,12 +35,13 @@ export default function Cardhooks(props) {
             setHeight(data.height)
             setWeight(data.weight)
             setBaseExp(data.base_experience)
-            setType({data.types[0].type.name
-                , data.types[1].type.name  })
+            setType([data.types[0].type.name
+                 ])
             // setType(data.types[1].type.name)
             setLoading(false);
             setNextPage(`https://pokeapi.co/api/v2/pokemon/${data.id + 1}`);
             setPrevPage(`https://pokeapi.co/api/v2/pokemon/${data.id - 1}`);
+            document.title = `${ID} ${name}`;
         } catch (error) {
             console.log(error)
         }
@@ -56,6 +57,7 @@ export default function Cardhooks(props) {
   function pokeInputHandler (event)  {
      setCurrentPage(`https://pokeapi.co/api/v2/pokemon/${event.target.value}`);
    }
+    
 
   
   return (
@@ -65,22 +67,15 @@ export default function Cardhooks(props) {
       ? ( <div className="spinner-border text-warning" role="status">
           <span className="sr-only">Loading...</span>
         </div>) 
-      : (<h4>
+      : (<h4>  
+          <span className="badge badge-pill badge-info">{ID } </span>
           {name}
-          <span className="badge badge-pill badge-info">{ID}</span>
         </h4>
         )}
-
-        <PokemonDetails type={type} height={height} weight={weight} baseExp={baseExp} />
-      <PokemonImages 
-      frontImage={frontImage} 
-      backImage={backImage} />
-      <input
-        onChange={(e) => pokeInputHandler(e) }
-        className="pokeInput"
-        type="text"
-        placeholder="enter a number. . ."
-      ></input>
+      <PokemonImages frontImage={frontImage} backImage={backImage} />
+      <PokemonDetails type={type} height={height} weight={weight} baseExp={baseExp} />
+      
+      <PokemonInput pokeInputHandler={pokeInputHandler} />
       <button
         onClick={e => setCurrentPage(`https://pokeapi.co/api/v2/pokemon/22`)}
         className="btn btn-dark"

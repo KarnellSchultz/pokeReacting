@@ -3,7 +3,7 @@ import React from "react";
 export default function Pagination({ gotoNextPage, gotoPrevPage, ID }) {
   return (
     <>
-      <div className="btn-group">
+      <div className="">
         { ID === 1 
         ? (
           <button className="btn btn-success disabled">Back -</button>) 
