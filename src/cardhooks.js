@@ -39,11 +39,11 @@ async function fetchData() {
         setWeight(data.weight)
         setBaseExp(data.base_experience)
         setType([data.types[0].type.name])
+        setLoading(false);
         // setType(data.types[1].type.name)
         setNextPage(`https://pokeapi.co/api/v2/pokemon/${data.id + 1}`);
         setPrevPage(`https://pokeapi.co/api/v2/pokemon/${data.id - 1}`);
         document.title = `${ID} ${name}`;
-        setLoading(false);
     } catch (error) {
         console.log(error)
         setCurrentPage(`https://pokeapi.co/api/v2/pokemon/${randomPoke()}`)
@@ -75,7 +75,7 @@ let randomPoke = (max = 900) => {
           <span className="sr-only">Loading...</span>
         </div>) 
       : (<h4>  
-          <span className="badge badge-pill badge-info">{ID } </span>
+          <span className="badge badge badge-info">{ID } </span>
           {name}
         </h4>
         )}
