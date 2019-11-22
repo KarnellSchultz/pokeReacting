@@ -23,30 +23,32 @@ export default function Cardhooks(props) {
   useEffect(() => {
     setLoading(true);
     fetchData();
-    async function fetchData() {
-        try {
-            let response = await fetch(`${currentPage}`);
-            let data = await response.json();
-            console.log(data);
-            setName(data.name);
-            setID(data.id);
-            setFrontImage(data.sprites.front_default);
-            setBackImage(data.sprites.back_default);
-            setHeight(data.height)
-            setWeight(data.weight)
-            setBaseExp(data.base_experience)
-            setType([data.types[0].type.name
-                 ])
-            // setType(data.types[1].type.name)
-            setLoading(false);
-            setNextPage(`https://pokeapi.co/api/v2/pokemon/${data.id + 1}`);
-            setPrevPage(`https://pokeapi.co/api/v2/pokemon/${data.id - 1}`);
-            document.title = `${ID} ${name}`;
-        } catch (error) {
-            console.log(error)
-        }
+
+}, [currentPage]);
+
+async function fetchData() {
+    try {
+        let response = await fetch(`${currentPage}`);
+        let data = await response.json();
+        console.log(data.name, data.id);
+        setName(data.name);
+        setID(data.id);
+        setFrontImage(data.sprites.front_default);
+        setBackImage(data.sprites.back_default);
+        setHeight(data.height)
+        setWeight(data.weight)
+        setBaseExp(data.base_experience)
+        setType([data.types[0].type.name])
+        // setType(data.types[1].type.name)
+        setNextPage(`https://pokeapi.co/api/v2/pokemon/${data.id + 1}`);
+        setPrevPage(`https://pokeapi.co/api/v2/pokemon/${data.id - 1}`);
+        document.title = `${ID} ${name}`;
+        setLoading(false);
+    } catch (error) {
+        console.log(error)
+        setCurrentPage(`https://pokeapi.co/api/v2/pokemon/${randomPoke()}`)
     }
-  }, [currentPage]);
+}
 
   function gotoNextPage() {
     setCurrentPage(nextPage);
@@ -58,11 +60,16 @@ export default function Cardhooks(props) {
      setCurrentPage(`https://pokeapi.co/api/v2/pokemon/${event.target.value}`);
    }
     
-
+let randomPoke = (max = 900) => {
+    console.log(max)
+    return Math.floor(Math.random() * Math.floor(max));
+}
   
   return (
     <>
-      <h2>Pokemon Stuff</h2>
+    <div className="card d-flex flex-column bg-light justify-content-center align-items-center shadow p-3 mb-5  rounded"> 
+
+      <h2>Pokemon React Pokedex</h2>
       {loading 
       ? ( <div className="spinner-border text-warning" role="status">
           <span className="sr-only">Loading...</span>
@@ -73,19 +80,20 @@ export default function Cardhooks(props) {
         </h4>
         )}
       <PokemonImages frontImage={frontImage} backImage={backImage} />
-      <PokemonDetails type={type} height={height} weight={weight} baseExp={baseExp} />
+      <PokemonDetails  type={type} height={height} weight={weight} baseExp={baseExp} />
       
       <PokemonInput pokeInputHandler={pokeInputHandler} />
       <button
-        onClick={e => setCurrentPage(`https://pokeapi.co/api/v2/pokemon/22`)}
+        onClick={e => setCurrentPage(`https://pokeapi.co/api/v2/pokemon/${randomPoke()}`)}
         className="btn btn-dark"
-      >Submit
+      >Random Poke
       </button>
       <Pagination
         ID={ID}
         gotoNextPage={gotoNextPage}
         gotoPrevPage={gotoPrevPage}
       />
+      </div>
     </>
   );
 }
